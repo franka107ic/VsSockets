@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const HTTPSPORT = 8443;
+const HTTPSPORT = 443;
 
 httpsServer.listen(HTTPSPORT, () =>
   console.log(`server listening at https: ${HTTPSPORT}`)
