@@ -6,8 +6,14 @@ const app = express();
 const { Server } = require("socket.io");
 const https = require("https");
 const fs = require("fs");
-const privateKey = fs.readFileSync("server.key", "utf8");
-const certificate = fs.readFileSync("server.crt", "utf8");
+const privateKey = fs.readFileSync(
+  "/etc/letsencrypt/live/ic-proj-updates-sockets-server.ideascloud.io/privkey.pem",
+  "utf8"
+);
+const certificate = fs.readFileSync(
+  "/etc/letsencrypt/live/ic-proj-updates-sockets-server.ideascloud.io/fullchain.pem",
+  "utf8"
+);
 const credentials = { key: privateKey, cert: certificate };
 const httpsServer = https.createServer(credentials, app);
 const io = new Server(httpsServer);
