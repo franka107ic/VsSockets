@@ -1,18 +1,24 @@
-const httpServer = require("http").createServer();
-const io = require("socket.io")(httpServer, {
-  cors: {
-    origin: "*",
-  },
-});
+/**
+ * Https Integration
+ */
+const express = require("express");
+const app = express();
+const { Server } = require("socket.io");
+const https = require("https");
+const fs = require("fs");
+const privateKey = fs.readFileSync("server.key", "utf8");
+const certificate = fs.readFileSync("server.crt", "utf8");
+const credentials = { key: privateKey, cert: certificate };
+const httpsServer = https.createServer(credentials, app);
+const io = new Server(httpsServer);
 
 io.on("connection", (socket) => {
-
   socket.on("joinChannel", ({ projectId }) => {
     socket.join(projectId);
   });
 
   socket.on("onChange", ({ projectId }) => {
-    io.to(projectId).emit("onChange", ({projectId}));
+    io.to(projectId).emit("onChange", { projectId });
   });
 
   socket.on("disconnect", () => {
@@ -20,8 +26,8 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const HTTPSPORT = 8443;
 
-httpServer.listen(PORT, () =>
-  console.log(`server listening at http://localhost:${PORT}`)
+httpsServer.listen(HTTPSPORT, () =>
+  console.log(`server listening at https: ${PORT}`)
 );
