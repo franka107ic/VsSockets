@@ -35,5 +35,5 @@ io.on("connection", (socket) => {
 const HTTPSPORT = 8443;
 
 httpsServer.listen(HTTPSPORT, () =>
-  console.log(`server listening at https: ${PORT}`)
+  console.log(`server listening at https: ${HTTPSPORT}`)
 );
