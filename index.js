@@ -18,17 +18,25 @@ const credentials = { key: privateKey, cert: certificate };
 const httpsServer = https.createServer(credentials, app);
 const io = new Server(httpsServer);
 
+app.use("/", (req, res) => {
+  res.send("<h1>Welcome to ideascloud socket server</h1>");
+});
+
 io.on("connection", (socket) => {
+  console.log("New device connected");
+
   socket.on("joinChannel", ({ projectId }) => {
+    console.log("A device is joining to project room");
     socket.join(projectId);
   });
 
   socket.on("onChange", ({ projectId }) => {
-    io.to(projectId).emit("onChange", { projectId });
+    console.log(`A change ocurred in project: ${projectId}`);
+    socket.broadcast.to(projectId).emit("onChange", { projectId });
   });
 
   socket.on("disconnect", () => {
-    console.log("disconnect");
+    console.log("A device was disconnected");
   });
 });
 
